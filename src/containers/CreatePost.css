@@ -1,0 +1,8 @@
+.CreatePost form {
+  padding-bottom: 15px;
+}
+
+.CreatePost form textarea {
+  height: 300px;
+  font-size: 24px;
+}
