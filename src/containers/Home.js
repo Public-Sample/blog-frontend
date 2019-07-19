@@ -24,12 +24,13 @@ export default class Home extends Component {
       this.setState({ user: await Auth.currentAuthenticatedUser() });
       const posts = await this.fetchPosts();
 
-      this.setState({ posts });
+      console.log(posts);
+      this.setState({ posts, isLoading: false });
     } catch (e) {
       console.error(e);
     }
   
-    this.setState({ isLoading: false });
+    // this.setState({ isLoading: false });
   }
   
   async fetchPosts() {
@@ -46,7 +47,7 @@ export default class Home extends Component {
               key={post.postId}
               to={`/posts/${post.postId}`}
             >
-              <ListGroupItem header={post.content.trim().split("\n")[0]}>
+              <ListGroupItem header={post.content && post.content.trim().split("\n")[0]}>
                 {"Created: " + new Date(post.createdAt).toLocaleString('en-AU')}
               </ListGroupItem>
             </LinkContainer>

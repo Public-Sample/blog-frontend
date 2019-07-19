@@ -33,7 +33,9 @@ export default class CreatePost extends Component {
   
     try {
       await this.createPost({
-        content: this.state.content
+        data: {
+          content: this.state.content,
+        },
       });
 
       this.props.history.push("/");
