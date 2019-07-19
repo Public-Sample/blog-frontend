@@ -21,12 +21,18 @@ export default class ViewPost extends Component {
     };
   }
 
+  defaultLikeBy(post) {
+    if (typeof post.likedBy === 'undefined' || !Array.isArray(post.likedBy)) {
+      post.likedBy = [];
+    }
+
+    return post;
+  }
+
   async componentDidMount() {
     try {
       const response = await this.getPost(this.state.postId);
       const post = response.data;
-
-      console.log(post);
 
       const user = await Auth.currentAuthenticatedUser();
       const userId = user.getUsername();
@@ -36,15 +42,11 @@ export default class ViewPost extends Component {
         isLoading: false,
       };
 
+      this.defaultLikeBy(post);
+
       if (post.likedBy && post.likedBy.includes(userId)) {
         state.liked = true;
       }
-      console.log(typeof post.likedBy);
-
-      if (typeof post.likedBy === 'undefined' || !Array.isArray(post.likedBy)) {
-        post.likedBy = [];
-      }
-      console.log(post);
 
       this.setState(state);
     } catch (error) {
@@ -59,13 +61,16 @@ export default class ViewPost extends Component {
   }
 
    handleOnClick = async event => {
+    let response;
     if (this.state.liked) {
-      await this.unlikePost(this.state.postId);
+      response = await this.unlikePost(this.state.postId);
       this.setState({ liked: false });
     } else {
-      await this.likePost(this.state.postId);
+      response = await this.likePost(this.state.postId);
       this.setState({ liked: true });
     }
+
+    this.setState({ post: this.defaultLikeBy(response.data) });
   }
 
   async likePost(postId) {
